@@ -18,16 +18,6 @@
       "query": "politics India OR geopolitics when:1d"
     },
     {
-      "id": "markets",
-      "label": "India Markets",
-      "query": "Sensex OR Nifty OR \"Indian stock market\" OR Dalal Street when:1d"
-    },
-    {
-      "id": "us-markets",
-      "label": "US Markets",
-      "url": "https://news.google.com/rss/search?q=%22Wall%20Street%22%20OR%20%22S%26P%20500%22%20OR%20Nasdaq%20OR%20%22Dow%20Jones%22%20OR%20%22US%20stocks%22%20when%3A1d&hl=en-US&gl=US&ceid=US:en"
-    },
-    {
       "id": "semis",
       "label": "Semiconductors",
       "query": "semiconductor OR chipmaker OR chips OR Nvidia OR TSMC OR Qualcomm OR Intel OR AMD OR ASML when:2d"
