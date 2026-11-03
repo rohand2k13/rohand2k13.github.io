@@ -26,6 +26,8 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Keep a copy of the news + blog data in the repo, so the site works
       # whichever GitHub Pages mode is selected.
       - name: Save data snapshot

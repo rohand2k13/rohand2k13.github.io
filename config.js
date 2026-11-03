@@ -7,6 +7,15 @@ window.SITE = {
   handle: "rohand2k13",
   role: "Engineer · Traveller · Writer",
   company: "",
+
+  // Shown under the name at the top: home city and work city
+  places: [
+    { code: "CCU", city: "Kolkata", kind: "home" },
+    { code: "MAS", city: "Chennai", kind: "work" }
+  ],
+
+  // Your GitHub username: powers the "People who follow me" panel
+  githubUser: "rohand2k13",
   headline: "A wireless communication engineer, by vocation and avocation.",
   intro: "I build the protocol software behind Wi‑Fi. Off the clock: wildlife, photography, slow travel and the essays that come out of it.",
 
@@ -24,7 +33,8 @@ window.SITE = {
     { name: "LinkedIn",  url: "https://www.linkedin.com/in/rohan2k13/", featured: true },
     { name: "Instagram", url: "https://www.instagram.com/rohand2k13/" },
     { name: "Facebook",  url: "https://www.facebook.com/rohand2k13" },
-    { name: "X",         url: "https://x.com/rohand2k13" }
+    { name: "X",         url: "https://x.com/rohand2k13", follow: "https://x.com/intent/follow?screen_name=rohand2k13" },
+    { name: "GitHub",    url: "https://github.com/rohand2k13", tile: false }  // header icon only; has its own Follow button
   ],
 
   // Email. Hidden for now. To show an "Email me" box, set showPublicly: true.

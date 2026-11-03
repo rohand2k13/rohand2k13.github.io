@@ -105,6 +105,25 @@ async function buildNews(previous) {
   return { updated: got ? new Date().toISOString() : previous?.updated || null, perTab: cfg.perTab || 8, tabs };
 }
 
+// ── GitHub followers (public) ───────────────────────────────
+async function buildFollowers(previous) {
+  const cfgSrc = await fs.readFile(path.join(ROOT, "config.js"), "utf8").catch(() => "");
+  const user = (cfgSrc.match(/githubUser:\s*"([^"]+)"/) || [])[1] || process.env.GITHUB_REPOSITORY_OWNER;
+  if (!user) return previous || null;
+  const headers = { "user-agent": "personal-site-build", accept: "application/vnd.github+json" };
+  if (process.env.GITHUB_TOKEN) headers.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+  try {
+    const [u, list] = await Promise.all([
+      fetch(`https://api.github.com/users/${user}`, { headers }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }),
+      fetch(`https://api.github.com/users/${user}/followers?per_page=60`, { headers }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    ]);
+    return {
+      user, count: u.followers ?? list.length, updated: new Date().toISOString(),
+      people: list.map(f => ({ login: f.login, avatar: f.avatar_url, url: f.html_url }))
+    };
+  } catch (e) { console.warn("followers:", e.message); return previous || null; }
+}
+
 // ── copy + write ─────────────────────────────────────────────
 async function copy(src, dst) {
   const st = await fs.stat(src).catch(() => null);
@@ -125,5 +144,8 @@ const news = process.env.SKIP_NEWS ? (previous || { updated: null, tabs: [] }) :
 
 await fs.writeFile(path.join(OUT, "data/posts.json"), JSON.stringify(posts));
 await fs.writeFile(path.join(OUT, "data/news.json"), JSON.stringify(news));
+const prevFollowers = JSON.parse(await fs.readFile(path.join(ROOT, "data/followers.json"), "utf8").catch(() => "null"));
+const followers = process.env.SKIP_NEWS ? prevFollowers : await buildFollowers(prevFollowers);
+if (followers) await fs.writeFile(path.join(OUT, "data/followers.json"), JSON.stringify(followers));
 await fs.writeFile(path.join(OUT, ".nojekyll"), "");
 console.log(`Built ${posts.length} posts, ${news.tabs.reduce((n, t) => n + t.items.length, 0)} headlines → _site/`);

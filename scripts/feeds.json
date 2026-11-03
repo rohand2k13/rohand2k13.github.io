@@ -1,12 +1,46 @@
 {
-  "_note": "News tabs on the site. Each tab pulls from Google News RSS. Edit 'query' to change what a tab shows; add or remove tabs freely. 'perTab' = headlines kept per tab.",
+  "_note": "News tabs on the site. Each tab pulls from Google News RSS. Edit 'query' to change what a tab shows (or give a full 'url'); add or remove tabs freely. 'perTab' = headlines kept per tab.",
   "perTab": 8,
   "tabs": [
-    { "id": "india",     "label": "India",     "url": "https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en" },
-    { "id": "world",     "label": "World",     "url": "https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-IN&gl=IN&ceid=IN:en" },
-    { "id": "politics",  "label": "Politics",  "query": "politics India OR geopolitics when:1d" },
-    { "id": "markets",   "label": "Markets",   "query": "Sensex OR Nifty OR \"stock market\" OR \"Wall Street\" when:1d" },
-    { "id": "travel",    "label": "Travel",    "query": "travel tourism destinations when:2d" },
-    { "id": "geography", "label": "Geography", "query": "geography OR climate OR earthquake OR monsoon OR wildlife when:2d" }
+    {
+      "id": "india",
+      "label": "India",
+      "url": "https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en"
+    },
+    {
+      "id": "world",
+      "label": "World",
+      "url": "https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-IN&gl=IN&ceid=IN:en"
+    },
+    {
+      "id": "politics",
+      "label": "Politics",
+      "query": "politics India OR geopolitics when:1d"
+    },
+    {
+      "id": "markets",
+      "label": "India Markets",
+      "query": "Sensex OR Nifty OR \"Indian stock market\" OR Dalal Street when:1d"
+    },
+    {
+      "id": "us-markets",
+      "label": "US Markets",
+      "url": "https://news.google.com/rss/search?q=%22Wall%20Street%22%20OR%20%22S%26P%20500%22%20OR%20Nasdaq%20OR%20%22Dow%20Jones%22%20OR%20%22US%20stocks%22%20when%3A1d&hl=en-US&gl=US&ceid=US:en"
+    },
+    {
+      "id": "semis",
+      "label": "Semiconductors",
+      "query": "semiconductor OR chipmaker OR chips OR Nvidia OR TSMC OR Qualcomm OR Intel OR AMD OR ASML when:2d"
+    },
+    {
+      "id": "travel",
+      "label": "Travel",
+      "query": "travel tourism destinations when:2d"
+    },
+    {
+      "id": "geography",
+      "label": "Geography",
+      "query": "geography OR climate OR earthquake OR monsoon OR wildlife when:2d"
+    }
   ]
 }

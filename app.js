@@ -20,6 +20,9 @@
     Instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>',
     Facebook: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.6h2.6l.4-3h-3V8.5c0-.87.25-1.46 1.5-1.46h1.6V4.36A21 21 0 0 0 14.27 4.2c-2.3 0-3.87 1.4-3.87 3.98v2.22H7.8v3h2.6V21h3.1Z"/></svg>',
     X: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.75 3h3.07l-6.72 7.68L22 21h-6.19l-4.85-6.34L5.4 21H2.33l7.19-8.21L2 3h6.35l4.38 5.79L17.75 3Zm-1.08 16.2h1.7L7.4 4.73H5.58l11.09 14.47Z"/></svg>',
+    GitHub: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2.2Z"/></svg>',
+    home: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.2 10 3.5l7 5.7V16a1 1 0 0 1-1 1h-3.6v-4.6H7.6V17H4a1 1 0 0 1-1-1V9.2Z"/></svg>',
+    work: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="2.8" y="6" width="14.4" height="10.5" rx="1.8"/><path d="M7.2 6V4.6c0-.6.5-1.1 1.1-1.1h3.4c.6 0 1.1.5 1.1 1.1V6M2.8 10.6h14.4"/></svg>',
     Gmail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>',
     arrow: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   };
@@ -37,11 +40,11 @@
 
   // ── pieces ───────────────────────────────────────────────
   const shortcutsHTML = () => {
-    const soc = socials.map(s => `
-      <a class="shortcut${s.featured ? " featured" : ""}" href="${esc(s.url)}" target="_blank" rel="noopener">
+    const soc = socials.filter(s => s.tile !== false).map(s => `
+      <a class="shortcut${s.featured ? " featured" : ""}" href="${esc(s.follow || s.url)}" target="_blank" rel="noopener" aria-label="Follow on ${esc(s.name)}">
         <span class="glyph tint-${esc(s.name.toLowerCase())}">${ICONS[s.name] || ICONS.arrow}</span>
-        <span><strong>${esc(s.name)}</strong><small>${s.featured ? "Most active here" : "@" + esc(S.handle || "")}</small></span>
-        <span class="arrow">${ICONS.arrow}</span>
+        <span><strong>${esc(s.name)}</strong><small>${s.featured ? "Most active" : "@" + esc(S.handle || "")}</small></span>
+        <span class="follow-pill">Follow</span>
       </a>`).join("");
     const mail = !S.showGmailShortcut ? "" : emails.map(e => `
       <a class="shortcut" href="${inboxUrl(e.address)}" target="_blank" rel="noopener">
@@ -188,6 +191,45 @@
     list.appendChild(ol);
   }
 
+  // ── followers (GitHub is the only network that shares its follower list publicly) ──
+  let FOLLOWERS = null;
+  async function loadFollowers() {
+    if (FOLLOWERS) return FOLLOWERS;
+    FOLLOWERS = await getJSON("data/followers.json");
+    if (!FOLLOWERS && S.githubUser) {                 // no saved copy: ask GitHub directly
+      try {
+        const u = S.githubUser;
+        const [info, list] = await Promise.all([
+          fetchT(`https://api.github.com/users/${u}`).then(r => r.json()),
+          fetchT(`https://api.github.com/users/${u}/followers?per_page=60`).then(r => r.json())
+        ]);
+        FOLLOWERS = { user: u, count: info.followers ?? list.length, people: list.map(f => ({ login: f.login, avatar: f.avatar_url, url: f.html_url })) };
+      } catch { FOLLOWERS = null; }
+    }
+    return FOLLOWERS;
+  }
+  async function mountFollowers() {
+    const box = document.getElementById("followers");
+    if (!box) return;
+    const f = await loadFollowers();
+    const user = (f && f.user) || S.githubUser;
+    const follow = `<a class="btn solid small" href="https://github.com/${encodeURIComponent(user)}" target="_blank" rel="noopener">${ICONS.GitHub} Follow on GitHub</a>`;
+    if (!f) { box.innerHTML = `<div class="followers-head"><p><strong>People who follow me</strong><span>Shown from GitHub, where follower lists are public.</span></p>${follow}</div>`; return; }
+    const people = f.people || [];
+    const shown = people.slice(0, 24);
+    box.innerHTML = `
+      <div class="followers-head">
+        <p><strong>${f.count} ${f.count === 1 ? "person follows" : "people follow"} me on GitHub</strong>
+        <span>${people.length ? "Follow me there and you'll show up here." : "No followers yet. Be the first, and you'll show up here."}</span></p>
+        ${follow}
+      </div>
+      ${shown.length ? `<ul class="faces">${shown.map(p => `
+        <li><a href="${esc(p.url)}" target="_blank" rel="noopener" title="@${esc(p.login)}">
+          <img src="${esc(p.avatar)}&s=96" alt="" width="44" height="44" loading="lazy"><span>@${esc(p.login)}</span></a></li>`).join("")}
+        ${f.count > shown.length ? `<li class="more"><a href="https://github.com/${encodeURIComponent(user)}?tab=followers" target="_blank" rel="noopener">+${f.count - shown.length}</a></li>` : ""}
+      </ul>` : ""}`;
+  }
+
   // ── views ────────────────────────────────────────────────
   function viewHome(anchor) {
     const longs = POSTS.filter(p => p.type === "long").slice(0, 3);
@@ -197,11 +239,18 @@
         <p class="eyebrow accent">${esc(S.role)}${S.company ? " · " + esc(S.company) : ""}</p>
         <h1>${esc(S.headline)}</h1>
         <div class="hero-sub"><p>${esc(S.intro)}</p></div>
+        ${(S.places || []).length ? `<ul class="places" aria-label="Where I am">${S.places.map(pl => `
+          <li class="place ${pl.kind === "work" ? "work" : "home"}" title="${pl.kind === "work" ? "Work" : "Home"}: ${esc(pl.city)}">
+            ${pl.kind === "work" ? ICONS.work : ICONS.home}
+            <strong>${esc(pl.code)}</strong><span>${esc(pl.city)}</span>
+            <em>${pl.kind === "work" ? "Work" : "Home"}</em>
+          </li>`).join('<li class="sep" aria-hidden="true">|</li>')}</ul>` : ""}
       </section>
 
       <section class="wrap" id="connect" aria-labelledby="connect-h">
-        <h2 id="connect-h" class="eyebrow" style="margin-bottom:14px">Find me</h2>
+        <h2 id="connect-h" class="eyebrow" style="margin-bottom:14px">Follow me</h2>
         ${shortcutsHTML()}
+        ${S.githubUser ? `<div class="followers" id="followers" aria-live="polite"></div>` : ""}
       </section>
 
       <div class="wrap section">
@@ -240,6 +289,7 @@
           </div>`).join("")}
       </section>`;
     mountNews();
+    mountFollowers();
     document.getElementById("news-refresh").onclick = () => mountNews(currentTab, true);
     if (anchor) document.getElementById(anchor)?.scrollIntoView();
     else scrollTo(0, 0);

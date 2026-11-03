@@ -228,3 +228,36 @@ img { max-width: 100%; display: block; }
 .about-card .beyond .chip:nth-child(5n+3) { background: var(--peach); }
 .about-card .beyond .chip:nth-child(5n+4) { background: var(--rose); }
 .about-card .beyond .chip:nth-child(5n+5) { background: var(--lilac); }
+
+/* ── Home / work badges ───────────────────────────────────── */
+.places { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.place { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px 9px 12px; border-radius: 999px; font-size: 15px; }
+.place svg { width: 18px; height: 18px; flex: none; }
+.place strong { font-family: var(--mono); font-size: 13px; letter-spacing: .06em; font-weight: 500; }
+.place span { color: var(--ink); }
+.place em { font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .75; }
+.place.home { background: var(--sage); color: var(--sage-ink); }
+.place.work { background: var(--sky); color: var(--sky-ink); }
+.places .sep { color: var(--line); font-size: 20px; }
+@media (max-width: 420px) { .places .sep { display: none; } }
+
+/* ── Follow tiles ─────────────────────────────────────────── */
+.glyph.tint-github { background: var(--sunk); color: var(--ink); }
+.follow-pill { margin-left: auto; flex: none; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: var(--ink); color: var(--ground); transition: background .15s; }
+.shortcut:hover .follow-pill { background: var(--accent); }
+.shortcut.featured .follow-pill { background: var(--sky-ink); color: #fff; }
+
+/* ── Followers panel ──────────────────────────────────────── */
+.followers { margin-top: 14px; padding: 20px 22px; border-radius: var(--radius); background: var(--lilac); }
+.followers:empty { display: none; }
+.followers-head { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; justify-content: space-between; }
+.followers-head p { margin: 0; }
+.followers-head strong { display: block; font-size: 17px; }
+.followers-head span { font-size: 14px; color: var(--lilac-ink); }
+.btn.small { min-height: 40px; padding: 0 16px; font-size: 13px; }
+.btn svg { width: 16px; height: 16px; }
+.faces { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.faces a { display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; width: 64px; }
+.faces img { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #fff; background: #fff; }
+.faces span { font-size: 11px; color: var(--lilac-ink); max-width: 64px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.faces .more a { width: 44px; height: 44px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-weight: 600; font-size: 13px; color: var(--lilac-ink); }
