@@ -181,7 +181,7 @@
       return;
     }
     const ol = document.createElement("ol");
-    items.forEach(it => {
+    items.slice(0, 6).forEach(it => {
       const li = document.createElement("li"), a = document.createElement("a");
       a.href = it.link; a.target = "_blank"; a.rel = "noopener";
       const h = document.createElement("span"); h.className = "h"; h.textContent = it.title;
@@ -213,81 +213,76 @@
     if (!box) return;
     const f = await loadFollowers();
     const user = (f && f.user) || S.githubUser;
-    const follow = `<a class="btn solid small" href="https://github.com/${encodeURIComponent(user)}" target="_blank" rel="noopener">${ICONS.GitHub} Follow on GitHub</a>`;
-    if (!f) { box.innerHTML = `<div class="followers-head"><p><strong>People who follow me</strong><span>Shown from GitHub, where follower lists are public.</span></p>${follow}</div>`; return; }
+    const follow = `<a class="btn solid small block" href="https://github.com/${encodeURIComponent(user)}" target="_blank" rel="noopener">${ICONS.GitHub} Follow on GitHub</a>`;
+    if (!f) { box.innerHTML = `<div class="followers-head"><strong>People who follow me</strong><span>Shown from GitHub, where follower lists are public.</span></div>${follow}`; return; }
     const people = f.people || [];
     const shown = people.slice(0, 24);
     box.innerHTML = `
       <div class="followers-head">
-        <p><strong>${f.count} ${f.count === 1 ? "person follows" : "people follow"} me on GitHub</strong>
-        <span>${people.length ? "Follow me there and you'll show up here." : "No followers yet. Be the first, and you'll show up here."}</span></p>
-        ${follow}
+        <strong>${f.count} ${f.count === 1 ? "follower" : "followers"} on GitHub</strong>
+        <span>${people.length ? "Follow me there to appear here." : "No followers yet. Be the first."}</span>
       </div>
       ${shown.length ? `<ul class="faces">${shown.map(p => `
-        <li><a href="${esc(p.url)}" target="_blank" rel="noopener" title="@${esc(p.login)}">
-          <img src="${esc(p.avatar)}&s=96" alt="" width="44" height="44" loading="lazy"><span>@${esc(p.login)}</span></a></li>`).join("")}
+        <li><a href="${esc(p.url)}" target="_blank" rel="noopener" title="@${esc(p.login)}" aria-label="@${esc(p.login)}">
+          <img src="${esc(p.avatar)}&s=96" alt="" width="36" height="36" loading="lazy"></a></li>`).join("")}
         ${f.count > shown.length ? `<li class="more"><a href="https://github.com/${encodeURIComponent(user)}?tab=followers" target="_blank" rel="noopener">+${f.count - shown.length}</a></li>` : ""}
-      </ul>` : ""}`;
+      </ul>` : ""}
+      ${follow}`;
   }
 
   // ── views ────────────────────────────────────────────────
   function viewHome(anchor) {
     const longs = POSTS.filter(p => p.type === "long").slice(0, 3);
     const shorts = POSTS.filter(p => p.type === "short").slice(0, 3);
-    main.innerHTML = `
-      <section class="hero wrap">
-        <p class="eyebrow accent">${esc(S.role)}${S.company ? " · " + esc(S.company) : ""}</p>
-        <h1>${esc(S.headline)}</h1>
-        <div class="hero-sub"><p>${esc(S.intro)}</p></div>
-        ${(S.places || []).length ? `<ul class="places" aria-label="Where I am">${S.places.map(pl => `
+    const placesHTML = (S.places || []).length ? `<ul class="places" aria-label="Where I am">${S.places.map(pl => `
           <li class="place ${pl.kind === "work" ? "work" : "home"}" title="${pl.kind === "work" ? "Work" : "Home"}: ${esc(pl.city)}">
             ${pl.kind === "work" ? ICONS.work : ICONS.home}
             <strong>${esc(pl.code)}</strong><span>${esc(pl.city)}</span>
             <em>${pl.kind === "work" ? "Work" : "Home"}</em>
-          </li>`).join('<li class="sep" aria-hidden="true">|</li>')}</ul>` : ""}
-      </section>
+          </li>`).join("")}</ul>` : "";
+    main.innerHTML = `
+      <div class="wrap bento">
+        <section class="card b-hero" aria-label="Introduction">
+          <p class="eyebrow accent">${esc(S.role)}${S.company ? " · " + esc(S.company) : ""}</p>
+          <h1>${esc(S.headline)}</h1>
+          <p class="hero-intro">${esc(S.intro)}</p>
+          ${placesHTML}
+        </section>
 
-      <section class="wrap" id="connect" aria-labelledby="connect-h">
-        <h2 id="connect-h" class="eyebrow" style="margin-bottom:14px">Follow me</h2>
-        ${shortcutsHTML()}
-        ${S.githubUser ? `<div class="followers" id="followers" aria-live="polite"></div>` : ""}
-      </section>
+        <section class="card b-follow" id="connect" aria-labelledby="connect-h">
+          <div class="card-head"><h2 id="connect-h">Follow me</h2><span class="handle">@${esc(S.handle || "")}</span></div>
+          ${shortcutsHTML()}
+          ${S.githubUser ? `<div class="followers" id="followers" aria-live="polite"></div>` : ""}
+        </section>
 
-      <div class="wrap section">
-        <div class="split">
-          <div class="col-main">
-            <div class="section-head">
-              <div><p class="eyebrow accent">Blog</p><h2>Latest writing</h2></div>
-              <a class="link" href="#/blog">All posts</a>
-            </div>
-            <div class="post-list">
-              ${longs.map(postCard).join("") || `<p class="empty">No essays yet — add one to the posts folder.</p>`}
-              ${shorts.length ? `<p class="eyebrow" style="margin-top:20px">Short notes</p>${shorts.map(postCard).join("")}` : ""}
-            </div>
+        <section class="card b-about" id="about" aria-labelledby="about-h">
+          <p class="eyebrow accent" id="about-h">About</p>
+          ${(S.about || []).map((l, i) => `<p class="about-line${i ? " sub" : ""}">${esc(l)}</p>`).join("")}
+        </section>
+
+        ${(S.beyond || []).length ? `
+        <section class="card b-beyond" aria-label="Beyond work">
+          <p class="eyebrow">Beyond work</p>
+          <ul class="chips">${S.beyond.map((b, i) => `<li class="chip t${i % 5}">${esc(b)}</li>`).join("")}</ul>
+        </section>` : ""}
+
+        <section class="card b-blog" aria-labelledby="blog-h">
+          <div class="card-head"><h2 id="blog-h">Latest writing</h2><a class="link" href="#/blog">All posts →</a></div>
+          <div class="post-list">
+            ${longs.map(postCard).join("") || `<p class="empty">No essays yet. Add one to the posts folder.</p>`}
+            ${shorts.map(postCard).join("")}
           </div>
-          <aside class="col-side">${newsHTML()}</aside>
-        </div>
+        </section>
+
+        <div class="b-news">${newsHTML()}</div>
       </div>
 
-      <section class="wrap section" id="about" aria-labelledby="about-h">
-        <div class="about-card">
-          <div class="about-main">
-            <p class="eyebrow accent" id="about-h">About</p>
-            ${(S.about || []).map((l, i) => `<p class="about-line${i ? " sub" : ""}">${esc(l)}</p>`).join("")}
-          </div>
-          ${(S.beyond || []).length ? `
-          <div class="beyond">
-            <p class="eyebrow">Beyond work</p>
-            <ul>${S.beyond.map((b, i) => `<li class="chip t${i % 5}">${esc(b)}</li>`).join("")}</ul>
-          </div>` : ""}
-        </div>
-        ${emails.filter(e => e.showPublicly).map(e => `
-          <div class="mail-row">
-            <div class="who"><strong>Write to me</strong><small>${esc(e.address)}</small></div>
-            <a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(e.address)}" target="_blank" rel="noopener">Compose in Gmail</a>
-            <a class="btn solid" href="mailto:${esc(e.address)}">Email me</a>
-          </div>`).join("")}
-      </section>`;
+      ${emails.filter(e => e.showPublicly).map(e => `
+        <div class="wrap"><div class="mail-row">
+          <div class="who"><strong>Write to me</strong><small>${esc(e.address)}</small></div>
+          <a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(e.address)}" target="_blank" rel="noopener">Compose in Gmail</a>
+          <a class="btn solid" href="mailto:${esc(e.address)}">Email me</a>
+        </div></div>`).join("")}`;
     mountNews();
     mountFollowers();
     document.getElementById("news-refresh").onclick = () => mountNews(currentTab, true);
