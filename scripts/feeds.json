@@ -1,0 +1,12 @@
+{
+  "_note": "News tabs on the site. Each tab pulls from Google News RSS. Edit 'query' to change what a tab shows; add or remove tabs freely. 'perTab' = headlines kept per tab.",
+  "perTab": 8,
+  "tabs": [
+    { "id": "india",     "label": "India",     "url": "https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en" },
+    { "id": "world",     "label": "World",     "url": "https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-IN&gl=IN&ceid=IN:en" },
+    { "id": "politics",  "label": "Politics",  "query": "politics India OR geopolitics when:1d" },
+    { "id": "markets",   "label": "Markets",   "query": "Sensex OR Nifty OR \"stock market\" OR \"Wall Street\" when:1d" },
+    { "id": "travel",    "label": "Travel",    "query": "travel tourism destinations when:2d" },
+    { "id": "geography", "label": "Geography", "query": "geography OR climate OR earthquake OR monsoon OR wildlife when:2d" }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "rohan-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Rohan's personal website — blog, news briefing and social shortcuts",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/build.mjs && npx --yes serve _site"
+  },
+  "dependencies": {
+    "marked": "^14.1.4"
+  }
+}
