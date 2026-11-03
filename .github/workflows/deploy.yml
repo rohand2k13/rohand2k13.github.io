@@ -8,7 +8,7 @@ on:
   workflow_dispatch:        # lets you run it by hand from the Actions tab
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -26,6 +26,19 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run build
+      # Keep a copy of the news + blog data in the repo, so the site works
+      # whichever GitHub Pages mode is selected.
+      - name: Save data snapshot
+        continue-on-error: true
+        run: |
+          mkdir -p data && cp _site/data/*.json data/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if ! git diff --cached --quiet; then
+            git commit -m "Update news and posts data"
+            git pull --rebase origin main && git push
+          fi
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

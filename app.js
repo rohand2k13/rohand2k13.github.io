@@ -290,7 +290,14 @@
     main.focus({ preventScroll: true });
   }
 
-  Promise.all([getJSON("data/posts.json"), getJSON("data/news.json")]).then(([p, n]) => {
+  Promise.all([getJSON("data/posts.json"), getJSON("data/news.json")]).then(async ([p, n]) => {
+    if (!n || !n.tabs?.length) {            // no saved copy yet: build tabs from the feed list and fetch live
+      const f = await getJSON("scripts/feeds.json");
+      if (f?.tabs) n = { updated: null, perTab: f.perTab || 8, tabs: f.tabs.map(t => ({
+        id: t.id, label: t.label, items: [],
+        url: t.url || `https://news.google.com/rss/search?q=${encodeURIComponent(t.query)}&hl=en-IN&gl=IN&ceid=IN:en`
+      })) };
+    }
     POSTS = p || []; NEWS = n;
     addEventListener("hashchange", route);
     route();
