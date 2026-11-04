@@ -133,6 +133,11 @@ img { max-width: 100%; display: block; }
 .place.home { background: var(--sage); color: var(--sage-ink); }
 .place.work { background: var(--sky); color: var(--sky-ink); }
 
+.hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 22px; }
+.hero-cta .btn { min-height: 48px; padding: 0 22px; font-size: 15px; }
+.hero-cta .btn svg { width: 18px; height: 18px; }
+.hero-cta span { font-size: 13.5px; color: var(--muted); }
+
 /* follow card */
 .b-follow { display: flex; flex-direction: column; }
 .shortcuts { display: flex; flex-direction: column; gap: 8px; }
@@ -150,6 +155,9 @@ img { max-width: 100%; display: block; }
 .glyph.tint-facebook  { background: var(--lilac); color: var(--lilac-ink); }
 .glyph.tint-x         { background: var(--butter); color: var(--ink); }
 .glyph.tint-github    { background: var(--sunk); color: var(--ink); }
+.glyph.tint-mentor    { background: var(--peach); color: var(--peach-ink); }
+.shortcut.mentor { border: 1px dashed #E7CDB3; }
+.shortcut.mentor .follow-pill { background: var(--peach-ink); }
 .glyph.tint-gmail     { background: var(--peach); color: var(--peach-ink); }
 .follow-pill { margin-left: auto; flex: none; font-size: 12px; font-weight: 700; padding: 7px 13px; border-radius: 999px; background: var(--ink); color: var(--accent-ink); transition: background .15s; }
 .shortcut:hover .follow-pill { background: var(--accent); }

@@ -45,6 +45,7 @@
     work: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="2.8" y="6" width="14.4" height="10.5" rx="1.8"/><path d="M7.2 6V4.6c0-.6.5-1.1 1.1-1.1h3.4c.6 0 1.1.5 1.1 1.1V6M2.8 10.6h14.4"/></svg>',
     open: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3M11 4h5v5M16 4l-7 7"/></svg>',
     share: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9.5M6.5 6.5 10 3l3.5 3.5M4 11.5v4a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-4"/></svg>',
+    calendar: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="14" height="12.5" rx="2"/><path d="M3 8.5h14M7 3v3M13 3v3M7.5 12.5l1.8 1.8 3.4-3.6"/></svg>',
     Gmail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>',
     arrow: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   };
@@ -74,7 +75,14 @@
         <span><strong>${esc(e.label || "Gmail")}</strong><small>Open inbox</small></span>
         <span class="arrow">${ICONS.arrow}</span>
       </a>`).join("");
-    return `<div class="shortcuts">${soc}${mail}</div>`;
+    const M = S.mentor;
+    const mentor = M && M.url ? `
+      <a class="shortcut mentor" href="${esc(M.url)}" target="_blank" rel="noopener">
+        <span class="glyph tint-mentor">${ICONS.calendar}</span>
+        <span><strong>${esc(M.label || "Book a call")}</strong><small>${esc(M.note || "")}</small></span>
+        <span class="follow-pill">Book</span>
+      </a>` : "";
+    return `<div class="shortcuts">${soc}${mentor}${mail}</div>`;
   };
 
   const initials = (S.name || "?").split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();
@@ -302,6 +310,7 @@
           <h1>${esc(S.headline)}</h1>
           <p class="hero-intro">${esc(S.intro)}</p>
           ${placesHTML}
+          ${S.mentor && S.mentor.url ? `<div class="hero-cta"><a class="btn solid" href="${esc(S.mentor.url)}" target="_blank" rel="noopener">${ICONS.calendar} ${esc(S.mentor.button || "Book a call")}</a><span>${esc(S.mentor.note || "")} · on Topmate</span></div>` : ""}
         </section>
 
         <section class="card b-follow" id="connect" aria-labelledby="connect-h">
