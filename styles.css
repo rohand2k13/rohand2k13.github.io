@@ -3,12 +3,12 @@
    Light, soft-tinted, bento-card layout
    ───────────────────────────────────────────────────────────── */
 :root {
-  --ground: #F3F1EC;       /* page — light, not white */
-  --card: #FBFAF7;         /* card surface */
-  --sunk: #ECE9E1;
-  --line: #E3DFD5;
+  --ground: #E2EBF6;       /* page — light powder blue */
+  --card: #F5F9FD;         /* card surface — palest blue */
+  --sunk: #E1E9F3;
+  --line: #D3DEEB;
   --ink: #17201B;
-  --muted: #5A6159;
+  --muted: #55606C;
   --accent: #2E6A4F;       /* forest green */
   --accent-ink: #F5F3EC;
   --amber: #B8741A;
@@ -41,9 +41,9 @@ body {
 body::before {
   content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background:
-    radial-gradient(40rem 28rem at 8% -6%, #DCEBE1 0%, transparent 60%),
-    radial-gradient(36rem 26rem at 96% 4%, #E2E9F6 0%, transparent 60%),
-    radial-gradient(34rem 24rem at 70% 108%, #F5E6D8 0%, transparent 60%);
+    radial-gradient(40rem 28rem at 8% -6%, #D3EBE0 0%, transparent 60%),
+    radial-gradient(36rem 26rem at 96% 4%, #DAD9F4 0%, transparent 60%),
+    radial-gradient(34rem 24rem at 70% 108%, #CFE2F6 0%, transparent 60%);
 }
 a { color: inherit; }
 img { max-width: 100%; display: block; }
@@ -63,7 +63,7 @@ img { max-width: 100%; display: block; }
   max-width: 1136px; margin: 12px auto 0; min-height: 60px;
   display: flex; align-items: center; flex-wrap: wrap; gap: 6px 18px;
   padding: 8px 10px 8px 18px; border-radius: 999px;
-  background: rgba(251, 250, 247, .72); backdrop-filter: saturate(1.4) blur(16px); -webkit-backdrop-filter: saturate(1.4) blur(16px);
+  background: rgba(245, 249, 253, .74); backdrop-filter: saturate(1.4) blur(16px); -webkit-backdrop-filter: saturate(1.4) blur(16px);
   border: 1px solid rgba(255, 255, 255, .7); box-shadow: var(--shadow);
 }
 .site-header .wrap.header-row { padding-left: 18px; padding-right: 10px; }
@@ -118,7 +118,7 @@ img { max-width: 100%; display: block; }
 .b-hero { position: relative; overflow: hidden; padding: clamp(28px, 4.5vw, 56px); display: flex; flex-direction: column; justify-content: flex-end; min-height: 380px; }
 .b-hero::after { /* soft colour orb */
   content: ""; position: absolute; width: 420px; height: 420px; right: -120px; top: -160px; border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #CFE3D6, #DCE7F5 55%, transparent 70%); opacity: .9; pointer-events: none;
+  background: radial-gradient(circle at 30% 30%, #CDE6DA, #D4E2F5 55%, transparent 70%); opacity: .9; pointer-events: none;
 }
 .b-hero > * { position: relative; z-index: 1; }
 .b-hero h1 { margin: 16px 0 0; font-size: clamp(36px, 5.4vw, 68px); line-height: 1.02; letter-spacing: -.035em; font-weight: 800; max-width: 15ch; }
