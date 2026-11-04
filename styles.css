@@ -100,19 +100,18 @@ img { max-width: 100%; display: block; }
     "hero  hero   follow"
     "about beyond follow"
     "notes notes  news"
-    "blog  blog   news"
-    "scrap scrap  scrap";
+    "blog  blog   news";
 }
 .b-hero { grid-area: hero; } .b-follow { grid-area: follow; } .b-about { grid-area: about; }
 .b-beyond { grid-area: beyond; } .b-blog { grid-area: blog; } .b-news { grid-area: news; min-width: 0; }
-.b-notes { grid-area: notes; } .b-scrap { grid-area: scrap; }
+.b-notes { grid-area: notes; }
 @media (max-width: 980px) {
   .bento { grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-areas: "hero hero" "follow follow" "about beyond" "notes notes" "blog blog" "news news" "scrap scrap"; }
+    grid-template-areas: "hero hero" "follow follow" "about beyond" "notes notes" "blog blog" "news news"; }
 }
 @media (max-width: 640px) {
   .bento { grid-template-columns: minmax(0, 1fr); gap: 12px;
-    grid-template-areas: "hero" "follow" "notes" "blog" "news" "scrap" "about" "beyond"; }
+    grid-template-areas: "hero" "follow" "notes" "blog" "news" "about" "beyond"; }
 }
 
 /* hero */
@@ -218,7 +217,7 @@ img { max-width: 100%; display: block; }
 .feed-actions { display: flex; flex-wrap: wrap; gap: 2px; margin: 8px 0 0 -10px; }
 .act { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px 0 10px; border: 0; border-radius: 999px; background: none; font: inherit; font-size: 13px; font-weight: 600; color: var(--muted); text-decoration: none; cursor: pointer; transition: background .15s, color .15s; }
 .act svg { width: 17px; height: 17px; }
-.act:hover { background: var(--rose); color: var(--rose-ink); }
+.act:hover { background: var(--sage); color: var(--sage-ink); }
 .act[data-share]:hover { background: var(--sky); color: var(--sky-ink); }
 .post-list .feed-post { margin: 0; }
 
@@ -227,9 +226,6 @@ img { max-width: 100%; display: block; }
 .feed-post.open .feed-avatar { width: 52px; height: 52px; }
 .feed-post.open .feed-head strong { font-size: 17px; }
 .feed-post.open .feed-body { font-size: 19px; line-height: 1.6; margin-top: 8px; }
-.discuss { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
-.discuss h2 { margin: 0 0 14px; font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
-.b-scrap .giscus-slot { min-height: 120px; }
 
 /* ── News ─────────────────────────────────────────────────── */
 .news { height: 100%; border-radius: var(--r-lg); background: var(--card); border: 1px solid rgba(255, 255, 255, .8); box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; }

@@ -21,14 +21,6 @@ window.SITE = {
   // and put its path here, e.g. "images/me.jpg". Leave empty to show your initials.
   avatar: "",
 
-  // Scrapbook + note reactions/comments (giscus, stored in this repo's Discussions).
-  // categoryId comes from giscus.app — the Scrapbook stays hidden until it's filled in.
-  giscus: {
-    repo: "rohand2k13/rohand2k13.github.io",
-    repoId: "R_kgDOVgRjnQ",
-    category: "General",
-    categoryId: ""
-  },
   headline: "A wireless communication engineer, by vocation and avocation.",
   intro: "I build the protocol software behind Wi‑Fi. Off the clock: wildlife, photography, slow travel and the essays that come out of it.",
 
