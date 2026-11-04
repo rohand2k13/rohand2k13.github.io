@@ -80,7 +80,7 @@
       <a class="shortcut mentor" href="${esc(M.url)}" target="_blank" rel="noopener">
         <span class="glyph tint-mentor">${ICONS.calendar}</span>
         <span><strong>${esc(M.label || "Book a call")}</strong><small>${esc(M.note || "")}</small></span>
-        <span class="follow-pill">Book</span>
+        <span class="follow-pill">Visit</span>
       </a>` : "";
     return `<div class="shortcuts">${soc}${mentor}${mail}</div>`;
   };
@@ -310,7 +310,6 @@
           <h1>${esc(S.headline)}</h1>
           <p class="hero-intro">${esc(S.intro)}</p>
           ${placesHTML}
-          ${S.mentor && S.mentor.url ? `<div class="hero-cta"><a class="btn solid" href="${esc(S.mentor.url)}" target="_blank" rel="noopener">${ICONS.calendar} ${esc(S.mentor.button || "Book a call")}</a><span>${esc(S.mentor.note || "")} · on Topmate</span></div>` : ""}
         </section>
 
         <section class="card b-follow" id="connect" aria-labelledby="connect-h">

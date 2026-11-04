@@ -14,12 +14,11 @@ window.SITE = {
     { code: "MAS", city: "Chennai", kind: "work" }
   ],
 
-  // Mentoring (Topmate): shown as a button in the intro card and a row in "Follow me"
+  // Topmate: shown as a row in "Follow me"
   mentor: {
     url: "https://topmate.io/rohand2k13",
-    button: "Book a free 1:1",
     label: "Topmate",
-    note: "Free 1:1 for students"
+    note: "@rohand2k13"
   },
 
   // Your GitHub username: powers the "People who follow me" panel
