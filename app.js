@@ -306,7 +306,10 @@
     main.innerHTML = `
       <div class="wrap bento">
         <section class="card b-hero" aria-label="Introduction">
-          <p class="eyebrow accent">${esc(S.role)}${S.company ? " · " + esc(S.company) : ""}</p>
+          <div class="hero-id">
+            ${S.avatar ? `<img class="hero-avatar" src="${esc(S.avatar)}" alt="${esc(S.name)}" width="76" height="76">` : ""}
+            <div><strong>${esc(S.name)}</strong><p class="eyebrow accent">${esc(S.role)}${S.company ? " · " + esc(S.company) : ""}</p></div>
+          </div>
           <h1>${esc(S.headline)}</h1>
           <p class="hero-intro">${esc(S.intro)}</p>
           ${placesHTML}

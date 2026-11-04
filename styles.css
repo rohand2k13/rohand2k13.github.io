@@ -121,7 +121,10 @@ img { max-width: 100%; display: block; }
   background: radial-gradient(circle at 30% 30%, #CDE6DA, #D4E2F5 55%, transparent 70%); opacity: .9; pointer-events: none;
 }
 .b-hero > * { position: relative; z-index: 1; }
-.b-hero h1 { margin: 16px 0 0; font-size: clamp(36px, 5.4vw, 68px); line-height: 1.02; letter-spacing: -.035em; font-weight: 800; max-width: 15ch; }
+.hero-id { display: flex; align-items: center; gap: 14px; }
+.hero-avatar { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 6px 18px -8px rgba(23, 32, 27, .35); }
+.hero-id strong { display: block; font-size: 18px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 3px; }
+.b-hero h1 { margin: 22px 0 0; font-size: clamp(36px, 5.4vw, 68px); line-height: 1.02; letter-spacing: -.035em; font-weight: 800; max-width: 15ch; }
 .hero-intro { margin: 20px 0 0; max-width: 52ch; font-size: 17px; color: var(--muted); }
 
 .places { list-style: none; margin: 26px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
