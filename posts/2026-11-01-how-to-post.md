@@ -8,7 +8,7 @@ summary: A template essay — copy this file, change the top lines, write below 
 Every post is one text file in the **posts** folder. The block at the top between the `---` lines tells the site about the post:
 
 - **title** — the headline
-- **date** — written as `YYYY-MM-DD`; newest posts show first
+- **date** — written as `YYYY-MM-DD`, or `YYYY-MM-DD HH:MM` (India time) so notes show "2h ago"; newest first
 - **type** — `long` for an essay with its own page, `short` for a quick note shown in full on the blog
 - **tags** — optional, like `[travel, wildlife]`
 - **summary** — optional one-line teaser for the essay card

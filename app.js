@@ -6,6 +6,26 @@
   // ── helpers ──────────────────────────────────────────────
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const fmtDate = d => { const x = new Date(d); return isNaN(x) ? esc(d) : x.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }); };
+  // Note dates may include a time: "2026-11-04 18:30" (read as India time)
+  const parseDate = d => {
+    if (!d) return new Date(NaN);
+    let x = String(d).trim().replace(" ", "T");
+    if (/T\d\d:\d\d$/.test(x)) x += ":00";
+    if (/T/.test(x) && !/[zZ]|[+-]\d\d:?\d\d$/.test(x)) x += "+05:30";
+    return new Date(x);
+  };
+  const relTime = d => {
+    const t = parseDate(d); if (isNaN(t)) return esc(d);
+    const hasTime = /\d\d:\d\d/.test(String(d));
+    const m = Math.round((Date.now() - t) / 60000);
+    if (hasTime && m < 1) return "now";
+    if (hasTime && m < 60) return `${m}m`;
+    if (hasTime && m < 1440) return `${Math.round(m / 60)}h`;
+    const days = Math.floor(m / 1440);
+    if (days >= 1 && days < 7) return `${days}d`;
+    if (!hasTime && days < 1) return "today";
+    return t.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: t.getFullYear() === new Date().getFullYear() ? undefined : "numeric" });
+  };
   const ago = iso => {
     if (!iso) return "";
     const m = Math.round((Date.now() - new Date(iso)) / 60000);
@@ -23,6 +43,9 @@
     GitHub: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2.2Z"/></svg>',
     home: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.2 10 3.5l7 5.7V16a1 1 0 0 1-1 1h-3.6v-4.6H7.6V17H4a1 1 0 0 1-1-1V9.2Z"/></svg>',
     work: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="2.8" y="6" width="14.4" height="10.5" rx="1.8"/><path d="M7.2 6V4.6c0-.6.5-1.1 1.1-1.1h3.4c.6 0 1.1.5 1.1 1.1V6M2.8 10.6h14.4"/></svg>',
+    comment: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 4.5h13a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H9l-3.6 2.8v-2.8H3.5a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1Z"/></svg>',
+    heart: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M10 16.5s-6.5-3.8-6.5-8.4A3.6 3.6 0 0 1 10 6a3.6 3.6 0 0 1 6.5 2.1c0 4.6-6.5 8.4-6.5 8.4Z"/></svg>',
+    share: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9.5M6.5 6.5 10 3l3.5 3.5M4 11.5v4a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-4"/></svg>',
     Gmail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>',
     arrow: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   };
@@ -55,8 +78,57 @@
     return `<div class="shortcuts">${soc}${mail}</div>`;
   };
 
+  const G = S.giscus || {};
+  const giscusReady = !!(G.repo && G.repoId && G.categoryId);
+  const initials = (S.name || "?").split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();
+  const avatarHTML = cls => S.avatar
+    ? `<img class="${cls}" src="${esc(S.avatar)}" alt="" width="44" height="44">`
+    : `<span class="${cls} initials" aria-hidden="true">${esc(initials)}</span>`;
+  const postUrl = slug => `${location.origin}${location.pathname}#/post/${encodeURIComponent(slug)}`;
+
+  const noteCard = (p, open) => `
+    <article class="feed-post${open ? " open" : ""}" aria-label="Note from ${fmtDate(p.date)}">
+      ${avatarHTML("feed-avatar")}
+      <div class="feed-main">
+        <header class="feed-head">
+          <strong>${esc(S.name)}</strong>
+          <span>@${esc(S.handle || "")} · <time datetime="${esc(p.date)}" title="${fmtDate(p.date)}">${relTime(p.date)}</time></span>
+        </header>
+        <div class="feed-body">${p.html}</div>
+        <footer class="feed-actions">
+          ${open ? "" : `<a class="act" href="#/post/${encodeURIComponent(p.slug)}">${giscusReady ? ICONS.heart + "<span>React</span>" : ICONS.comment + "<span>Open</span>"}</a>`}
+          ${!open && giscusReady ? `<a class="act" href="#/post/${encodeURIComponent(p.slug)}">${ICONS.comment}<span>Comment</span></a>` : ""}
+          <button type="button" class="act" data-share="${esc(p.slug)}" data-title="${esc(p.title)}">${ICONS.share}<span>Share</span></button>
+        </footer>
+      </div>
+    </article>`;
+
+  async function sharePost(btn) {
+    const url = postUrl(btn.dataset.share), label = btn.querySelector("span");
+    try {
+      if (navigator.share) { await navigator.share({ title: btn.dataset.title, url }); return; }
+      await navigator.clipboard.writeText(url);
+      label.textContent = "Link copied";
+    } catch { label.textContent = "Copy failed"; }
+    setTimeout(() => (label.textContent = "Share"), 1800);
+  }
+  document.addEventListener("click", e => { const b = e.target.closest("[data-share]"); if (b) sharePost(b); });
+
+  // giscus: visitors sign in with GitHub to leave scraps, comments and reactions
+  function mountGiscus(slot, term) {
+    if (!slot || !giscusReady) return;
+    slot.innerHTML = "";
+    const sc = document.createElement("script");
+    sc.src = "https://giscus.app/client.js"; sc.async = true; sc.crossOrigin = "anonymous";
+    const attrs = { repo: G.repo, "repo-id": G.repoId, category: G.category || "General", "category-id": G.categoryId,
+      mapping: "specific", term, strict: "1", "reactions-enabled": "1", "emit-metadata": "0",
+      "input-position": "top", theme: "light", lang: "en", loading: "lazy" };
+    Object.entries(attrs).forEach(([k, v]) => sc.setAttribute(`data-${k}`, v));
+    slot.appendChild(sc);
+  }
+
   const postCard = p => p.type === "short"
-    ? `<article class="note"><div class="meta"><span class="kind">Note</span><span>${fmtDate(p.date)}</span></div><div class="body">${p.html}</div></article>`
+    ? noteCard(p)
     : `<a class="post-card" href="#/post/${encodeURIComponent(p.slug)}">
          <div class="meta"><span class="kind">Essay</span><span>${fmtDate(p.date)}</span><span>${p.minutes} min read</span></div>
          <h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p></a>`;
@@ -233,7 +305,7 @@
   // ── views ────────────────────────────────────────────────
   function viewHome(anchor) {
     const longs = POSTS.filter(p => p.type === "long").slice(0, 3);
-    const shorts = POSTS.filter(p => p.type === "short").slice(0, 3);
+    const shorts = POSTS.filter(p => p.type === "short").slice(0, 4);
     const placesHTML = (S.places || []).length ? `<ul class="places" aria-label="Where I am">${S.places.map(pl => `
           <li class="place ${pl.kind === "work" ? "work" : "home"}" title="${pl.kind === "work" ? "Work" : "Home"}: ${esc(pl.city)}">
             ${pl.kind === "work" ? ICONS.work : ICONS.home}
@@ -266,13 +338,25 @@
           <ul class="chips">${S.beyond.map((b, i) => `<li class="chip t${i % 5}">${esc(b)}</li>`).join("")}</ul>
         </section>` : ""}
 
-        <section class="card b-blog" aria-labelledby="blog-h">
-          <div class="card-head"><h2 id="blog-h">Latest writing</h2><a class="link" href="#/blog">All posts →</a></div>
-          <div class="post-list">
-            ${longs.map(postCard).join("") || `<p class="empty">No essays yet. Add one to the posts folder.</p>`}
-            ${shorts.map(postCard).join("")}
+        <section class="card b-notes" id="notes" aria-labelledby="notes-h">
+          <div class="card-head"><h2 id="notes-h">Notes</h2><a class="link" href="#/notes">All notes →</a></div>
+          <div class="feed">
+            ${shorts.map(p => noteCard(p)).join("") || `<p class="empty">No notes yet.</p>`}
           </div>
         </section>
+
+        <section class="card b-blog" aria-labelledby="blog-h">
+          <div class="card-head"><h2 id="blog-h">Essays</h2><a class="link" href="#/blog">All posts →</a></div>
+          <div class="post-list">
+            ${longs.map(postCard).join("") || `<p class="empty">No essays yet. Add one to the posts folder.</p>`}
+          </div>
+        </section>
+
+        ${giscusReady ? `
+        <section class="card b-scrap" id="scrapbook" aria-labelledby="scrap-h">
+          <div class="card-head"><h2 id="scrap-h">Scrapbook</h2><span class="handle">Say hi. Sign in with GitHub to leave a scrap.</span></div>
+          <div class="giscus-slot" data-term="scrapbook"></div>
+        </section>` : ""}
 
         <div class="b-news">${newsHTML()}</div>
       </div>
@@ -285,6 +369,7 @@
         </div></div>`).join("")}`;
     mountNews();
     mountFollowers();
+    mountGiscus(document.querySelector('#scrapbook .giscus-slot'), "scrapbook");
     document.getElementById("news-refresh").onclick = () => mountNews(currentTab, true);
     if (anchor) document.getElementById(anchor)?.scrollIntoView();
     else scrollTo(0, 0);
@@ -311,6 +396,21 @@
     const p = POSTS.find(x => x.slug === slug);
     if (!p) { main.innerHTML = `<section class="wrap article"><a class="back" href="#/blog">← All posts</a><h1>Post not found</h1></section>`; return; }
     document.title = `${p.title} — ${S.name}`;
+    const discuss = giscusReady ? `
+        <section class="discuss" aria-label="Reactions and comments">
+          <h2>${p.type === "short" ? "Reactions & replies" : "Reactions & comments"}</h2>
+          <div class="giscus-slot"></div>
+        </section>` : "";
+    if (p.type === "short") {
+      main.innerHTML = `
+      <div class="wrap"><div class="article note-page">
+        <a class="back" href="#/notes">← All notes</a>
+        ${noteCard(p, true)}
+        ${discuss}
+      </div></div>`;
+      mountGiscus(main.querySelector(".giscus-slot"), `post:${p.slug}`);
+      scrollTo(0, 0); return;
+    }
     main.innerHTML = `
       <article class="wrap"><div class="article">
         <a class="back" href="#/blog">← All posts</a>
@@ -318,7 +418,9 @@
         <h1>${esc(p.title)}</h1>
         ${p.cover ? `<img class="cover" src="${esc(p.cover)}" alt="">` : ""}
         <div class="prose">${p.html}</div>
+        ${discuss}
       </div></article>`;
+    mountGiscus(main.querySelector(".giscus-slot"), `post:${p.slug}`);
     scrollTo(0, 0);
   }
 
@@ -328,6 +430,7 @@
     document.title = `${S.name} — engineer, traveller, writer`;
     let r = "home";
     if (h.startsWith("#/post/")) { r = "blog"; viewPost(decodeURIComponent(h.slice(7))); }
+    else if (h.startsWith("#/notes")) { r = "blog"; viewBlog("short"); }
     else if (h.startsWith("#/blog")) { r = "blog"; viewBlog(); }
     else if (h.startsWith("#/") || h === "") viewHome();
     else { r = h.slice(1); viewHome(h.slice(1)); }       // #news, #connect
