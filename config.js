@@ -26,7 +26,7 @@ window.SITE = {
 
   // Profile picture for your notes feed. Upload a square photo to the images folder
   // and put its path here, e.g. "images/me.jpg". Leave empty to show your initials.
-  avatar: "images/rohan.jpg",
+  avatar: "images/rohan-v2.jpg",
 
   headline: "A wireless communication engineer, by vocation and avocation.",
   intro: "I build the protocol software behind Wi‑Fi. Off the clock: wildlife, photography, slow travel and the essays that come out of it.",
