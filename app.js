@@ -330,6 +330,7 @@
         <section class="card b-about" id="about" aria-labelledby="about-h">
           <p class="eyebrow accent" id="about-h">About</p>
           ${(S.about || []).map((l, i) => `<p class="about-line${i ? " sub" : ""}">${esc(l)}</p>`).join("")}
+          ${(S.aboutLong || []).length ? `<a class="link about-more" href="#/about">More about me →</a>` : ""}
         </section>
 
         ${(S.beyond || []).length ? `
@@ -405,12 +406,34 @@
     scrollTo(0, 0);
   }
 
+  function viewAbout() {
+    document.title = `About — ${S.name}`;
+    const places = (S.places || []).map(pl => `
+      <li class="place ${pl.kind === "work" ? "work" : "home"}">${pl.kind === "work" ? ICONS.work : ICONS.home}<strong>${esc(pl.code)}</strong><span>${esc(pl.city)}</span><em>${pl.kind === "work" ? "Work" : "Home"}</em></li>`).join("");
+    main.innerHTML = `
+      <div class="wrap"><article class="article about-page">
+        <a class="back" href="#/">← Home</a>
+        <header class="about-hero">
+          ${S.avatar ? `<img class="about-photo" src="${esc(S.avatar)}" alt="${esc(S.name)}" width="120" height="120">` : ""}
+          <div>
+            <p class="eyebrow accent">About me</p>
+            <h1>${esc(S.name)}</h1>
+            ${places ? `<ul class="places">${places}</ul>` : ""}
+          </div>
+        </header>
+        <div class="prose about-prose">${(S.aboutLong || []).map(t => `<p>${esc(t)}</p>`).join("")}</div>
+        ${(S.beyond || []).length ? `<div class="about-chips"><p class="eyebrow">Interests</p><ul class="chips">${S.beyond.map((b, i) => `<li class="chip t${i % 5}">${esc(b)}</li>`).join("")}</ul></div>` : ""}
+      </article></div>`;
+    scrollTo(0, 0);
+  }
+
   // ── router ───────────────────────────────────────────────
   function route() {
     const h = location.hash || "#/";
     document.title = `${S.name} — engineer, traveller, writer`;
     let r = "home";
     if (h.startsWith("#/post/")) { r = "blog"; viewPost(decodeURIComponent(h.slice(7))); }
+    else if (h.startsWith("#/about")) { r = "about"; viewAbout(); }
     else if (h.startsWith("#/notes")) { r = "blog"; viewBlog("short"); }
     else if (h.startsWith("#/blog")) { r = "blog"; viewBlog(); }
     else if (h.startsWith("#/") || h === "") viewHome();

@@ -37,6 +37,14 @@ window.SITE = {
     "M.Tech in EC, IIT Kharagpur."
   ],
 
+  // Full "About me" page (#/about). One string per paragraph.
+  aboutLong: [
+    "I am Rohan Dutta, an engineer and technology enthusiast currently working as an Engineering Manager and Wi-Fi protocol stack developer at Qualcomm. My work involves developing and architecting next-generation Wi-Fi technologies, with a focus on wireless networking, WLAN protocols and security. I enjoy exploring emerging technologies and contributing to the evolution of wireless communication systems.",
+    "Academically, I hold a Master's degree in Electronics and Electrical Communication Engineering from the Indian Institute of Technology (IIT), Kharagpur, with a specialisation in Telecommunications Systems. I also hold a Bachelor's degree in Electronics and Communication Engineering.",
+    "Beyond technology and engineering, I have a keen interest in science, history, geography and current affairs. I enjoy travelling, particularly exploring places rich in natural beauty, wildlife and cultural heritage. Reading, music and photography are among my other interests. I am also an enthusiastic Toastmaster and enjoy public speaking and exchanging ideas.",
+    "This website is a little space to bring together some of my interests, experiences, thoughts and explorations."
+  ],
+
   // "Beyond work" chips
   beyond: ["Wildlife & photography", "Travel writing", "Toastmasters", "Table tennis", "Pool", "Music", "Reading", "Cricket", "Snooker", "Premier League"],
 
