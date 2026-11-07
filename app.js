@@ -82,7 +82,13 @@
         <span><strong>${esc(M.label || "Book a call")}</strong><small>${esc(M.note || "")}</small></span>
         <span class="follow-pill">Visit</span>
       </a>` : "";
-    return `<div class="shortcuts">${soc}${mentor}${mail}</div>`;
+    const pub = emails.filter(e => e.showPublicly).map(e => `
+      <a class="shortcut" href="mailto:${esc(e.address)}">
+        <span class="glyph tint-gmail">${ICONS.Gmail}</span>
+        <span><strong>${esc(e.label || "Email")}</strong><small>${esc(e.address)}</small></span>
+        <span class="follow-pill">Write</span>
+      </a>`).join("");
+    return `<div class="shortcuts">${soc}${mentor}${pub}${mail}</div>`;
   };
 
   const initials = (S.name || "?").split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();
@@ -351,12 +357,7 @@
         <div class="b-news">${newsHTML()}</div>
       </div>
 
-      ${emails.filter(e => e.showPublicly).map(e => `
-        <div class="wrap"><div class="mail-row">
-          <div class="who"><strong>Write to me</strong><small>${esc(e.address)}</small></div>
-          <a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(e.address)}" target="_blank" rel="noopener">Compose in Gmail</a>
-          <a class="btn solid" href="mailto:${esc(e.address)}">Email me</a>
-        </div></div>`).join("")}`;
+`;
     mountNews();
     mountFollowers();
     document.getElementById("news-refresh").onclick = () => mountNews(currentTab, true);

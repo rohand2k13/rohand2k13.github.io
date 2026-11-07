@@ -49,10 +49,11 @@ window.SITE = {
     { name: "GitHub",    url: "https://github.com/rohand2k13", tile: false }  // header icon only; has its own Follow button
   ],
 
-  // Email. Hidden for now. To show an "Email me" box, set showPublicly: true.
-  // showGmailShortcut: true adds an "Open inbox" tile and header icon (only works for you when signed in).
+  // Public contact email: shown as an "Email" row in "Follow me".
+  // (Other addresses on your domain, like admin@, are set up in the forwarding
+  // service only and never listed here.)
   showGmailShortcut: false,
   emails: [
-    { label: "Personal Gmail", address: "rohand2k13@gmail.com", showPublicly: false }
+    { label: "Email", address: "mail@rohand2k13.com", showPublicly: true }
   ]
 };
