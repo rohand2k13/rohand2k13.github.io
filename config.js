@@ -28,6 +28,10 @@ window.SITE = {
   // and put its path here, e.g. "images/me.jpg". Leave empty to show your initials.
   avatar: "images/rohan-v2.jpg",
 
+  // Large photo in the home page hero, plus the little floating badges around it
+  portrait: "images/portrait-v2.jpg",
+  badges: ["Wi‑Fi protocol stack", "IIT Kharagpur", "Toastmaster"],
+
   headline: "A wireless communication engineer, by vocation and avocation.",
   intro: "I build the protocol software behind Wi‑Fi. Off the clock: wildlife, photography, slow travel and the essays that come out of it.",
 

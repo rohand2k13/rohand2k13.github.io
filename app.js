@@ -46,6 +46,9 @@
     open: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3M11 4h5v5M16 4l-7 7"/></svg>',
     share: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9.5M6.5 6.5 10 3l3.5 3.5M4 11.5v4a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-4"/></svg>',
     calendar: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="14" height="12.5" rx="2"/><path d="M3 8.5h14M7 3v3M13 3v3M7.5 12.5l1.8 1.8 3.4-3.6"/></svg>',
+    wifi: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2.5 7.5a10.6 10.6 0 0 1 15 0M5.3 10.4a6.6 6.6 0 0 1 9.4 0M8.1 13.2a2.6 2.6 0 0 1 3.8 0"/><circle cx="10" cy="15.8" r=".9" fill="currentColor"/></svg>',
+    cap: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="m2 7.5 8-3.5 8 3.5-8 3.5-8-3.5Z"/><path d="M5.5 9.2v3.6c1.2 1.2 2.7 1.8 4.5 1.8s3.3-.6 4.5-1.8V9.2M18 7.5v4"/></svg>',
+    mic: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="7.5" y="2.5" width="5" height="9" rx="2.5"/><path d="M4.5 9.5a5.5 5.5 0 0 0 11 0M10 15v2.5"/></svg>',
     Gmail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>',
     arrow: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   };
@@ -302,68 +305,120 @@
   // ── views ────────────────────────────────────────────────
   function viewHome(anchor) {
     const longs = POSTS.filter(p => p.type === "long").slice(0, 3);
-    const shorts = POSTS.filter(p => p.type === "short").slice(0, 4);
+    const shorts = POSTS.filter(p => p.type === "short").slice(0, 3);
     const placesHTML = (S.places || []).length ? `<ul class="places" aria-label="Where I am">${S.places.map(pl => `
           <li class="place ${pl.kind === "work" ? "work" : "home"}" title="${pl.kind === "work" ? "Work" : "Home"}: ${esc(pl.city)}">
             ${pl.kind === "work" ? ICONS.work : ICONS.home}
             <strong>${esc(pl.code)}</strong><span>${esc(pl.city)}</span>
             <em>${pl.kind === "work" ? "Work" : "Home"}</em>
           </li>`).join("")}</ul>` : "";
+    // headline: everything after the last comma gets the highlight
+    const hl = String(S.headline || ""), cut = hl.lastIndexOf(",");
+    const headline = cut > 0 ? `${esc(hl.slice(0, cut + 1))} <span class="hl">${esc(hl.slice(cut + 1).trim())}</span>` : esc(hl);
+    const badgeIcons = [ICONS.wifi, ICONS.cap, ICONS.mic];
+    const chips = (S.beyond || []).map((b, i) => `<li class="chip t${i % 5}">${esc(b)}</li>`).join("");
+    const firstAbout = (S.aboutLong || [])[0] || "";
+
     main.innerHTML = `
-      <div class="wrap bento">
-        <section class="card b-hero" aria-label="Introduction">
-          <div class="hero-id">
-            ${S.avatar ? `<img class="hero-avatar" src="${esc(S.avatar)}" alt="${esc(S.name)}" width="76" height="76">` : ""}
-            <div><strong>${esc(S.name)}</strong><p class="eyebrow accent">${esc(S.role)}${S.company ? " · " + esc(S.company) : ""}</p></div>
+      <section class="hero2" aria-label="Introduction">
+        <div class="wrap hero2-grid">
+          <div class="hero2-copy reveal">
+            <p class="pill-label"><span class="dot" aria-hidden="true"></span>${esc(S.role)}</p>
+            <h1>${headline}</h1>
+            <p class="hero2-intro">${esc(S.intro)}</p>
+            <div class="hero2-actions">
+              <a class="btn solid lg" href="#/about">About me</a>
+              <a class="btn ghost lg" href="#connect">Let's connect</a>
+            </div>
+            ${placesHTML}
           </div>
-          <h1>${esc(S.headline)}</h1>
-          <p class="hero-intro">${esc(S.intro)}</p>
-          ${placesHTML}
-        </section>
-
-        <section class="card b-follow" id="connect" aria-labelledby="connect-h">
-          <div class="card-head"><h2 id="connect-h">Follow me</h2><span class="handle">@${esc(S.handle || "")}</span></div>
-          ${shortcutsHTML()}
-          ${S.githubUser ? `<div class="followers" id="followers" aria-live="polite"></div>` : ""}
-        </section>
-
-        <section class="card b-about" id="about" aria-labelledby="about-h">
-          <p class="eyebrow accent" id="about-h">About</p>
-          ${(S.about || []).map((l, i) => `<p class="about-line${i ? " sub" : ""}">${esc(l)}</p>`).join("")}
-          ${(S.aboutLong || []).length ? `<a class="link about-more" href="#/about">More about me →</a>` : ""}
-        </section>
-
-        ${(S.beyond || []).length ? `
-        <section class="card b-beyond" aria-label="Beyond work">
-          <p class="eyebrow">Beyond work</p>
-          <ul class="chips">${S.beyond.map((b, i) => `<li class="chip t${i % 5}">${esc(b)}</li>`).join("")}</ul>
-        </section>` : ""}
-
-        <section class="card b-notes" id="notes" aria-labelledby="notes-h">
-          <div class="card-head"><h2 id="notes-h">Notes</h2><a class="link" href="#/notes">All notes →</a></div>
-          <div class="feed">
-            ${shorts.map(p => noteCard(p)).join("") || `<p class="empty">No notes yet.</p>`}
+          <div class="hero2-art reveal">
+            <div class="blob" aria-hidden="true"></div>
+            <figure class="photo-frame">
+              <img src="${esc(S.portrait || S.avatar || "")}" alt="${esc(S.name)}" width="720" height="900">
+            </figure>
+            ${(S.badges || []).slice(0, 3).map((t, i) => `<span class="float-badge fb${i}">${badgeIcons[i] || ""}${esc(t)}</span>`).join("")}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="card b-blog" aria-labelledby="blog-h">
-          <div class="card-head"><h2 id="blog-h">Essays</h2><a class="link" href="#/blog">All posts →</a></div>
-          <div class="post-list">
-            ${longs.map(postCard).join("") || `<p class="empty">No essays yet. Add one to the posts folder.</p>`}
+      ${chips ? `
+      <section class="marquee" aria-label="Interests">
+        <ul class="marquee-track">${chips}${chips.replace(/<li /g, '<li aria-hidden="true" ')}</ul>
+      </section>` : ""}
+
+      <section class="section2" id="about" aria-labelledby="about-h">
+        <div class="wrap about2 reveal">
+          <div>
+            <p class="eyebrow accent">About</p>
+            <h2 id="about-h" class="h2">Hello, I'm ${esc((S.name || "").split(" ")[0])}.</h2>
           </div>
-        </section>
+          <div>
+            <p class="lead">${esc(firstAbout || (S.about || []).join(" "))}</p>
+            <div class="facts2">
+              ${(S.about || []).slice(1).map(l => `<span class="fact"><strong>${ICONS.cap}</strong>${esc(l.replace(/\.$/, ""))}</span>`).join("")}
+              ${(S.places || []).map(pl => `<span class="fact"><strong>${pl.kind === "work" ? ICONS.work : ICONS.home}</strong>${pl.kind === "work" ? "Works in" : "Home in"} ${esc(pl.city)}</span>`).join("")}
+            </div>
+            ${(S.aboutLong || []).length ? `<a class="link-arrow" href="#/about">Read my full story <span aria-hidden="true">→</span></a>` : ""}
+          </div>
+        </div>
+      </section>
 
+      <section class="section2 tint" id="writing" aria-labelledby="writing-h">
+        <div class="wrap reveal">
+          <div class="section2-head">
+            <div><p class="eyebrow accent">Writing</p><h2 id="writing-h" class="h2">Notes &amp; essays</h2></div>
+            <a class="link-arrow" href="#/blog">See everything <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="writing-grid">
+            <div class="col" id="notes">
+              <h3 class="col-title">Latest notes</h3>
+              <div class="feed">${shorts.map(p => noteCard(p)).join("") || `<p class="empty">No notes yet.</p>`}</div>
+              <a class="link-arrow small" href="#/notes">All notes <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="col">
+              <h3 class="col-title">Essays</h3>
+              <div class="post-list">${longs.map(postCard).join("") || `<p class="empty">No essays yet.</p>`}</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
+      <section class="section2" id="news-section" aria-label="News">
+        <div class="wrap reveal">
+          <div class="section2-head">
+            <div><p class="eyebrow accent">Briefing</p><h2 class="h2">What's happening</h2></div>
+          </div>
+          <div class="news-wide">${newsHTML()}</div>
+        </div>
+      </section>
 
-        <div class="b-news">${newsHTML()}</div>
-      </div>
-
-`;
+      <section class="section2 connect-band" id="connect" aria-labelledby="connect-h">
+        <div class="wrap reveal">
+          <div class="connect-inner">
+            <div class="connect-copy">
+              <p class="eyebrow accent">Connect</p>
+              <h2 id="connect-h" class="h2">Let's stay in touch.</h2>
+              <p class="lead">Follow along on the networks I use most, or drop me a line.</p>
+              ${S.githubUser ? `<div class="followers" id="followers" aria-live="polite"></div>` : ""}
+            </div>
+            <div class="connect-links">${shortcutsHTML()}</div>
+          </div>
+        </div>
+      </section>`;
     mountNews();
     mountFollowers();
     document.getElementById("news-refresh").onclick = () => mountNews(currentTab, true);
-    if (anchor) document.getElementById(anchor)?.scrollIntoView();
+    revealOnScroll();
+    if (anchor) document.getElementById(anchor === "news" ? "news-section" : anchor)?.scrollIntoView();
     else scrollTo(0, 0);
+  }
+
+  function revealOnScroll() {
+    const els = main.querySelectorAll(".reveal");
+    if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) { els.forEach(e => e.classList.add("in")); return; }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
+    els.forEach(e => io.observe(e));
   }
 
   function viewBlog(filter = "all") {
