@@ -47,6 +47,7 @@
     share: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9.5M6.5 6.5 10 3l3.5 3.5M4 11.5v4a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-4"/></svg>',
     calendar: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="14" height="12.5" rx="2"/><path d="M3 8.5h14M7 3v3M13 3v3M7.5 12.5l1.8 1.8 3.4-3.6"/></svg>',
     Quora: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11.5" cy="11" r="7"/><path d="M13.5 15.5c1 2.4 2.6 3.6 5 3.3"/></svg>',
+    Threads: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.4"/><path d="M15.4 12v1.3a2.3 2.3 0 0 0 4.6 0V12a8 8 0 1 0-3.1 6.3"/></svg>',
     Gmail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>',
     arrow: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   };
@@ -64,32 +65,30 @@
 
   // ── pieces ───────────────────────────────────────────────
   const shortcutsHTML = () => {
-    const soc = socials.filter(s => s.tile !== false).map(s => `
-      <a class="shortcut${s.featured ? " featured" : ""}" href="${esc(s.follow || s.url)}" target="_blank" rel="noopener" aria-label="Follow on ${esc(s.name)}">
+    const shown = socials.filter(s => s.tile !== false);
+    const feat = shown.filter(s => s.featured).map(s => `
+      <a class="shortcut featured" href="${esc(s.follow || s.url)}" target="_blank" rel="noopener" aria-label="Follow on ${esc(s.name)}">
         <span class="glyph tint-${esc(s.name.toLowerCase())}">${ICONS[s.name] || ICONS.arrow}</span>
         <span><strong>${esc(s.name)}</strong><small>${s.sub ? esc(s.sub) : "@" + esc(S.handle || "")}</small></span>
         <span class="follow-pill">Follow</span>
       </a>`).join("");
-    const mail = !S.showGmailShortcut ? "" : emails.map(e => `
-      <a class="shortcut" href="${inboxUrl(e.address)}" target="_blank" rel="noopener">
-        <span class="glyph tint-gmail">${ICONS.Gmail}</span>
-        <span><strong>${esc(e.label || "Gmail")}</strong><small>Open inbox</small></span>
-        <span class="arrow">${ICONS.arrow}</span>
+    const grid = shown.filter(s => !s.featured).map(s => `
+      <a class="social-tile" href="${esc(s.follow || s.url)}" target="_blank" rel="noopener" title="${esc(s.name)}${s.sub ? " · " + esc(s.sub) : " · @" + esc(S.handle || "")}" aria-label="Follow on ${esc(s.name)}">
+        <span class="glyph tint-${esc(s.name.toLowerCase())}">${ICONS[s.name] || ICONS.arrow}</span>
+        <span>${esc(s.name)}</span>
       </a>`).join("");
     const M = S.mentor;
     const mentor = M && M.url ? `
-      <a class="shortcut mentor" href="${esc(M.url)}" target="_blank" rel="noopener">
+      <a class="action-btn" href="${esc(M.url)}" target="_blank" rel="noopener">
         <span class="glyph tint-mentor">${ICONS.calendar}</span>
-        <span><strong>${esc(M.label || "Book a call")}</strong><small>${esc(M.note || "")}</small></span>
-        <span class="follow-pill">Visit</span>
+        <span><strong>${esc(M.label || "Book a call")}</strong><small>Visit profile</small></span>
       </a>` : "";
     const pub = emails.filter(e => e.showPublicly).map(e => `
-      <a class="shortcut" href="mailto:${esc(e.address)}">
+      <a class="action-btn" href="mailto:${esc(e.address)}" title="${esc(e.address)}">
         <span class="glyph tint-gmail">${ICONS.Gmail}</span>
-        <span><strong>${esc(e.label || "Email")}</strong><small>${esc(e.address)}</small></span>
-        <span class="follow-pill">Write</span>
+        <span><strong>${esc(e.label || "Email")}</strong><small>Write to me</small></span>
       </a>`).join("");
-    return `<div class="shortcuts">${soc}${mentor}${pub}${mail}</div>`;
+    return `<div class="shortcuts">${feat}${grid ? `<div class="social-grid">${grid}</div>` : ""}${mentor || pub ? `<div class="action-row">${mentor}${pub}</div>` : ""}</div>`;
   };
 
   const initials = (S.name || "?").split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();

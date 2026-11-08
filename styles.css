@@ -306,3 +306,20 @@ img { max-width: 100%; display: block; }
 /* calmer GitHub follow button inside the followers box */
 .followers .btn.solid { background: rgba(255,255,255,.75); border-color: transparent; color: var(--lilac-ink); }
 .followers .btn.solid:hover { background: #fff; color: var(--ink); }
+
+/* ── Follow card: featured bar + icon grid + two actions ──── */
+.b-follow .shortcuts { gap: 10px; }
+.social-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.social-tile { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px 12px; border-radius: 16px; background: #fff; border: 1px solid var(--line); text-decoration: none; font-size: 13px; font-weight: 600; color: var(--ink); transition: transform .15s, box-shadow .15s, border-color .15s; }
+.social-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); border-color: transparent; }
+.social-tile .glyph { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; }
+.social-tile .glyph svg { width: 20px; height: 20px; }
+.glyph.tint-threads { background: var(--sunk); color: var(--ink); }
+.action-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.action-btn { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 10px 12px; border-radius: 16px; background: #fff; border: 1px solid var(--line); text-decoration: none; color: var(--ink); transition: transform .15s, box-shadow .15s, border-color .15s; }
+.action-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); border-color: transparent; }
+.action-btn .glyph { width: 34px; height: 34px; flex: none; border-radius: 10px; display: grid; place-items: center; }
+.action-btn .glyph svg { width: 18px; height: 18px; }
+.action-btn strong { display: block; font-size: 14px; font-weight: 600; line-height: 1.2; }
+.action-btn small { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.b-follow .followers { margin-top: 14px; }
