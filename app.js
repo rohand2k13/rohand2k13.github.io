@@ -46,6 +46,7 @@
     open: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3M11 4h5v5M16 4l-7 7"/></svg>',
     share: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9.5M6.5 6.5 10 3l3.5 3.5M4 11.5v4a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-4"/></svg>',
     calendar: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="14" height="12.5" rx="2"/><path d="M3 8.5h14M7 3v3M13 3v3M7.5 12.5l1.8 1.8 3.4-3.6"/></svg>',
+    Quora: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11.5" cy="11" r="7"/><path d="M13.5 15.5c1 2.4 2.6 3.6 5 3.3"/></svg>',
     Gmail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>',
     arrow: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   };
@@ -66,7 +67,7 @@
     const soc = socials.filter(s => s.tile !== false).map(s => `
       <a class="shortcut${s.featured ? " featured" : ""}" href="${esc(s.follow || s.url)}" target="_blank" rel="noopener" aria-label="Follow on ${esc(s.name)}">
         <span class="glyph tint-${esc(s.name.toLowerCase())}">${ICONS[s.name] || ICONS.arrow}</span>
-        <span><strong>${esc(s.name)}</strong><small>${s.featured ? "@" + esc(S.handle || "") + " · Most active" : "@" + esc(S.handle || "")}</small></span>
+        <span><strong>${esc(s.name)}</strong><small>${s.sub ? esc(s.sub) : "@" + esc(S.handle || "")}</small></span>
         <span class="follow-pill">Follow</span>
       </a>`).join("");
     const mail = !S.showGmailShortcut ? "" : emails.map(e => `

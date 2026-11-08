@@ -157,6 +157,7 @@ img { max-width: 100%; display: block; }
 .glyph.tint-mentor    { background: var(--peach); color: var(--peach-ink); }
 .shortcut.mentor { border: 1px dashed #E7CDB3; }
 .shortcut.mentor .follow-pill { color: var(--peach-ink); border-color: #EBCFB5; }
+.glyph.tint-quora     { background: #F6DEDA; color: #A13B2B; }
 .glyph.tint-gmail     { background: var(--peach); color: var(--peach-ink); }
 .follow-pill { margin-left: auto; flex: none; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: transparent; color: var(--ink); border: 1px solid var(--line); transition: background .15s, color .15s, border-color .15s; }
 .shortcut:hover .follow-pill { background: var(--accent); border-color: var(--accent); color: #fff; }

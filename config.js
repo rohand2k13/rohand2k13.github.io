@@ -54,6 +54,7 @@ window.SITE = {
     { name: "Instagram", url: "https://www.instagram.com/rohand2k13/" },
     { name: "Facebook",  url: "https://www.facebook.com/rohand2k13" },
     { name: "X",         url: "https://x.com/rohand2k13", follow: "https://x.com/intent/follow?screen_name=rohand2k13" },
+    { name: "Quora",     url: "https://www.quora.com/profile/Rohan-Dutta-23", sub: "Rohan Dutta" },
     { name: "GitHub",    url: "https://github.com/rohand2k13", tile: false }  // header icon only; has its own Follow button
   ],
 
