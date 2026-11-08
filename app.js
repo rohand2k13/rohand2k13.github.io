@@ -66,7 +66,7 @@
     const soc = socials.filter(s => s.tile !== false).map(s => `
       <a class="shortcut${s.featured ? " featured" : ""}" href="${esc(s.follow || s.url)}" target="_blank" rel="noopener" aria-label="Follow on ${esc(s.name)}">
         <span class="glyph tint-${esc(s.name.toLowerCase())}">${ICONS[s.name] || ICONS.arrow}</span>
-        <span><strong>${esc(s.name)}</strong><small>${s.featured ? "Most active" : "@" + esc(S.handle || "")}</small></span>
+        <span><strong>${esc(s.name)}</strong><small>${s.featured ? "@" + esc(S.handle || "") + " · Most active" : "@" + esc(S.handle || "")}</small></span>
         <span class="follow-pill">Follow</span>
       </a>`).join("");
     const mail = !S.showGmailShortcut ? "" : emails.map(e => `

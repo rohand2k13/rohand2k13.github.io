@@ -50,7 +50,7 @@ window.SITE = {
 
   // Social shortcuts — shown in this order. Check each link opens YOUR profile.
   socials: [
-    { name: "LinkedIn",  url: "https://www.linkedin.com/in/rohan2k13/", featured: true },
+    { name: "LinkedIn",  url: "https://www.linkedin.com/in/rohand2k13/", featured: true },
     { name: "Instagram", url: "https://www.instagram.com/rohand2k13/" },
     { name: "Facebook",  url: "https://www.facebook.com/rohand2k13" },
     { name: "X",         url: "https://x.com/rohand2k13", follow: "https://x.com/intent/follow?screen_name=rohand2k13" },
