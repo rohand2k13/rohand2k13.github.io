@@ -120,7 +120,7 @@ img { max-width: 100%; display: block; }
 .hero-id { display: flex; align-items: center; gap: 14px; }
 .hero-avatar { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 6px 18px -8px rgba(23, 32, 27, .35); }
 .hero-id strong { display: block; font-size: 18px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 3px; }
-.b-hero h1 { margin: 22px 0 0; font-size: clamp(32px, 4.4vw, 54px); line-height: 1.1; letter-spacing: -.025em; font-weight: 600; max-width: 18ch; }
+.b-hero h1 { margin: 22px 0 0; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.25; letter-spacing: -.015em; font-weight: 600; max-width: 26ch; }
 .hero-intro { margin: 20px 0 0; max-width: 52ch; font-size: 17px; color: var(--muted); }
 
 .places { list-style: none; margin: 26px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
